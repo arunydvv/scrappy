@@ -1,6 +1,7 @@
 import BreadCrumbHeader from '@/components/BreadCrumbHeader'
 import DesktopSidebar from '@/components/Sidebar'
 import { ModeToggle } from '@/components/ThemeModeToggle'
+import { SignedIn, UserButton } from '@clerk/nextjs'
 import { Separator } from '@radix-ui/react-separator'
 import React from 'react'
 
@@ -11,10 +12,13 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             <DesktopSidebar/>
             
             <div className="flex flex-col flex-1 min-h-screen">
-                <header className="flex items-center justify-between px-6 py-4 h-[50px] container">
+                <header className="flex items-center justify-between px-6 py-4 h-[50px] ">
                     <BreadCrumbHeader />
-                    <div className='gap-1 flex items-center'>
-                        <ModeToggle/>
+                    <div className='gap-3 flex items-center'>
+                        <ModeToggle />
+                        <SignedIn>
+                            <UserButton/>
+                        </SignedIn>
                     </div>
                 </header>
 
