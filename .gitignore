@@ -34,3 +34,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib/generated/prisma
+
+
+# Prisma
+.prisma/
+app/generated/prisma/
+
+# Environment variables
+.env
+.env.*
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Logs
+npm-debug.log*
