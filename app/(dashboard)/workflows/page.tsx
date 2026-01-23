@@ -5,19 +5,18 @@ import React, { Suspense } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, AlertCircleIcon, Inbox } from "lucide-react"
 
-
-import { Button } from '@/components/ui/button'
-import { InfoIcon } from 'lucide-react'
+import CreateWorkflowDialog from './_components/CreateWorkflowDialog'
 
 
 const page = () => {
   return (
     <div className='flex-1 flex flex-col h-full p-[2%]'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between '>
         <div className='flex flex-col'>
           <h1 className='text-3xl font-bold'>Workflows</h1>
           <p className='text-muted-foreground'>Manage your Workflows</p>
         </div>
+        <CreateWorkflowDialog  />
       </div>
 
       <div className='h-full py-6'>
@@ -25,7 +24,6 @@ const page = () => {
           <UserWorkflows />
         </Suspense>
       </div>
-
     </div>
   )
 }
@@ -72,18 +70,22 @@ async function UserWorkflows() {
           <p className='text-sm text-muted-foreground '>
             Click the button below to create your first workflow
           </p>
+          <CreateWorkflowDialog triggerText={"Create your first Workflow"} />
 
         </div>
 
       </div>
     )
     
-  } 
+  }
 
-  return <div></div>
+  return <pre>
+    {JSON.stringify(workflows, null , 4)}
+  </pre>
   }
 
 
 
 
 export default page
+
