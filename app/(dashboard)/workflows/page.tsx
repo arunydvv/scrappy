@@ -5,19 +5,19 @@ import React, { Suspense } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, AlertCircleIcon, Inbox } from "lucide-react"
 
-
-import { Button } from '@/components/ui/button'
-import { InfoIcon } from 'lucide-react'
+import CreateWorkflowDialog from './_components/CreateWorkflowDialog'
+import WorkflowCard from './_components/WorkflowCard'
 
 
 const page = () => {
   return (
     <div className='flex-1 flex flex-col h-full p-[2%]'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between '>
         <div className='flex flex-col'>
           <h1 className='text-3xl font-bold'>Workflows</h1>
           <p className='text-muted-foreground'>Manage your Workflows</p>
         </div>
+        <CreateWorkflowDialog  />
       </div>
 
       <div className='h-full py-6'>
@@ -25,7 +25,6 @@ const page = () => {
           <UserWorkflows />
         </Suspense>
       </div>
-
     </div>
   )
 }
@@ -47,6 +46,8 @@ function UserWorkflowsSkeleton() {
 
 async function UserWorkflows() {
   const workflows = await getWorkflowsForUser();
+  console.log("Workflows:", workflows);
+
   if (!workflows) {
     return (
       <Alert variant="destructive" className="max-w-md">
@@ -72,18 +73,29 @@ async function UserWorkflows() {
           <p className='text-sm text-muted-foreground '>
             Click the button below to create your first workflow
           </p>
+          <CreateWorkflowDialog triggerText={"Create your first Workflow"} />
 
         </div>
 
       </div>
     )
     
-  } 
+  }
 
-  return <div></div>
+  return (
+    <>
+      <div className='grid grid-cols-1 gap-4'>
+        {workflows.map((workflow) => (
+          <WorkflowCard key={workflow.id} workflow={workflow} />
+        ))}
+
+      </div>
+    </>
+  )
   }
 
 
 
 
 export default page
+
