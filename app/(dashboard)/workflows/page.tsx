@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, AlertCircleIcon, Inbox } from "lucide-react"
 
 import CreateWorkflowDialog from './_components/CreateWorkflowDialog'
+import WorkflowCard from './_components/WorkflowCard'
 
 
 const page = () => {
@@ -45,6 +46,8 @@ function UserWorkflowsSkeleton() {
 
 async function UserWorkflows() {
   const workflows = await getWorkflowsForUser();
+  console.log("Workflows:", workflows);
+
   if (!workflows) {
     return (
       <Alert variant="destructive" className="max-w-md">
@@ -79,9 +82,16 @@ async function UserWorkflows() {
     
   }
 
-  return <pre>
-    {JSON.stringify(workflows, null , 4)}
-  </pre>
+  return (
+    <>
+      <div className='grid grid-cols-1 gap-4'>
+        {workflows.map((workflow) => (
+          <WorkflowCard key={workflow.id} workflow={workflow} />
+        ))}
+
+      </div>
+    </>
+  )
   }
 
 

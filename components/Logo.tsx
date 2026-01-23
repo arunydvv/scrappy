@@ -26,7 +26,7 @@ function Logo({
                     
                 </span>
                 <span className="text-stone-700 dark:text-stone-300">
-                    Scrappy
+                    Lumae
                 </span>
 
             </div>

@@ -34,7 +34,6 @@ export default function RootLayout({
             {children}
           </AppProviders>
 
-          {/* ✅ MUST be inside body */}
           <Toaster richColors />
         </ClerkProvider>
       </body>
