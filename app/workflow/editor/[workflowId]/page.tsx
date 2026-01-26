@@ -1,6 +1,8 @@
+import { waitFor } from "@/lib/helper/waitFor"
 import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { notFound } from "next/navigation"
+import Editor from "../../_components/Editor"
 
 interface PageProps {
     params: {
@@ -16,6 +18,8 @@ const Page = async ({ params }: PageProps) => {
         notFound()
     }
 
+    await waitFor(2000)
+
     const workflow = await prisma.workflow.findFirst({
         where: {
             id: workflowId,
@@ -27,12 +31,10 @@ const Page = async ({ params }: PageProps) => {
         notFound()
     }
 
-    return (
-        <div>
-            <pre className="h-screen">
-        {JSON.stringify(workflow, null, 2)}
-            </pre>
-        </div>
+    return ( 
+        <Editor workflow={workflow}> 
+                        
+        </Editor>
     )
 }
 
