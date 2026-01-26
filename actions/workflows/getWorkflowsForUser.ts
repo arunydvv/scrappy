@@ -2,10 +2,11 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { cache } from "react";
 
-export async function getWorkflowsForUser() {
+
+export const getWorkflowsForUser = cache(async () => {
     const { userId } = auth();
-    console.log("Hello1")
 
     if (!userId) {
         throw new Error("Unauthenticated");
@@ -20,4 +21,4 @@ export async function getWorkflowsForUser() {
             createdAt: "asc",
         },
     });
-}
+})
