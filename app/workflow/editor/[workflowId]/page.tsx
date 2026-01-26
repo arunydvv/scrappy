@@ -29,7 +29,9 @@ const Page = async ({ params }: PageProps) => {
 
     return (
         <div>
-            {workflow.name}
+            <pre className="h-screen">
+        {JSON.stringify(workflow, null, 2)}
+            </pre>
         </div>
     )
 }
