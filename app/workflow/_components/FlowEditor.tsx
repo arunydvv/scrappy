@@ -24,7 +24,13 @@ interface FlowEditorProps {
 }
 
 const NodeTypes = {
-  Node : NodeComponent
+  LumaeNode : NodeComponent
+}
+
+const snapGrid: [number, number] = [1, 1];
+
+const firViewOptions = {
+  padding: 2
 }
 
 
@@ -52,10 +58,13 @@ const FlowEditor = ({ workflow }: FlowEditorProps) => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={NodeTypes}
+        snapGrid={snapGrid}
+        fitViewOptions={firViewOptions}
+        snapToGrid
         fitView
       >
         <Background gap={12} size={1} />
-        <Controls position="top-left" />
+        <Controls position="top-left" fitViewOptions={firViewOptions}/>
       </ReactFlow>
     </main>
   )

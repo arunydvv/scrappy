@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { notFound } from "next/navigation"
 import Editor from "../../_components/Editor"
+import { getWorkflow } from "@/actions/workflows/getWorkflow"
 
 interface PageProps {
     params: {
@@ -17,25 +18,18 @@ const Page = async ({ params }: PageProps) => {
     if (!userId) {
         notFound()
     }
+    // await waitFor(1000)
 
-    await waitFor(2000)
-
-    const workflow = await prisma.workflow.findFirst({
-        where: {
-            id: workflowId,
-            userId,
-        },
-    })
-
+    const workflow = await getWorkflow(workflowId, userId)
+    
     if (!workflow) {
         notFound()
     }
 
     return ( 
-        <Editor workflow={workflow}> 
+        <Editor workflow={workflow} />
+)
                         
-        </Editor>
-    )
 }
 
 export default Page
