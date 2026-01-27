@@ -12,7 +12,7 @@ export default function HomePage() {
         </h1>
 
         <p className="text-muted-foreground max-w-2xl">
-          Scrappy helps you design powerful workflows to automate tasks,
+          Lumae helps you design powerful workflows to automate tasks,
           orchestrate processes, and ship faster — without unnecessary
           complexity.
         </p>

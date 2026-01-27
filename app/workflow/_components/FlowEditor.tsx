@@ -15,17 +15,23 @@ import {
 } from "@xyflow/react"
 
 import "@xyflow/react/dist/style.css"
+import { TaskType } from "@/types/task"
+import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
+import NodeComponent from "./nodes/NodeComponent"
 
 interface FlowEditorProps {
   workflow: Workflow
 }
 
+const NodeTypes = {
+  Node : NodeComponent
+}
+
+
 const FlowEditor = ({ workflow }: FlowEditorProps) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([{
-    id: "node-1",
-    position: { x: 0, y: 0 },
-    data: { label: "Node 1" },  
-  }])
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([
+    createReactFlowNode(TaskType.LAUNCH_BROWSER)
+  ])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
   const onConnect = useCallback(
@@ -35,24 +41,7 @@ const FlowEditor = ({ workflow }: FlowEditorProps) => {
     [setEdges]
   )
 
-  const handleAddNode = useCallback(() => {
-    setNodes((nds) => {
-      const nextId = `node-${nds.length + 1}`
 
-      return [
-        ...nds,
-        {
-          id: nextId,
-          position: {
-            x: 100 + nds.length * 40,
-            y: 100 + nds.length * 80,
-          },
-          data: { label: `Node ${nds.length + 1}` },
-          type: "default",
-        },
-      ]
-    })
-  }, [setNodes])
 
   return (
     <main className="w-full h-screen">
@@ -62,6 +51,7 @@ const FlowEditor = ({ workflow }: FlowEditorProps) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={NodeTypes}
         fitView
       >
         <Background gap={12} size={1} />
