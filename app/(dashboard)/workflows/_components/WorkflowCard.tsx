@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Workflow } from "@/app/generated/prisma";
+import { Workflow } from "@/node_modules/.prisma/client";
+
 import { WorkflowStatus } from "@/types/workflowTypes";
 import { Delete, FileTextIcon, MoreVerticalIcon, PlayIcon, ShuffleIcon, TrashIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
