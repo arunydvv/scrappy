@@ -1,9 +1,9 @@
-import { AppNode } from '@/types/appNode';
-import { TaskType } from '@/types/task'
+import { AppNode } from '@/types/nodes';
+import { TaskType } from '@/types/tasks'
 
 const createReactFlowNode = (
     nodeType: TaskType,
-    position?: { x: number; y: number },
+    position?: { x: number; y: number },  
 
 ): AppNode => {
     return {

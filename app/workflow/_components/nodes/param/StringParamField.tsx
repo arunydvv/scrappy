@@ -2,14 +2,14 @@
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { TaskParams } from "@/types/task"
+import { TaskParams } from "@/types/tasks"
 import React, { useId } from "react"
+import { ParamProps } from "@/types/nodes"
 
-interface ParamProps {
-    params: TaskParams
-}
 
-const StringParamField = ({ params }: ParamProps) => {
+
+
+const StringParamField = ({ params, value, updateNodeParamValue }: ParamProps) => {
     const id = useId()
 
     return (
@@ -25,6 +25,7 @@ const StringParamField = ({ params }: ParamProps) => {
                 id={id}
                 required={params.required}
                 placeholder={params.placeholder ?? ""}
+                
                 className="text-sm"
             />
             {

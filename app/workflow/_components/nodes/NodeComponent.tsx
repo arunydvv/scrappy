@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { NodeProps } from "@xyflow/react"
 import { NodeCard } from './NodeCard'
 import NodeHeader from './NodeHeader'
-import { AppNodeData } from '@/types/appNode'
+import { AppNodeData } from '@/types/nodes'
 import { TaskRegistry } from '@/lib/workflow/task/registry'
 import NodeInputs, { NodeInput } from './NodeInputs'
 
@@ -20,7 +20,9 @@ const NodeComponent = memo((props: NodeProps) => {
                 {task.inputs.map(input => (
                     <NodeInput
                         key={input.name}
-                        input={input} />
+                        input={input}
+                        nodeId={props.id}
+                    />
                 ))}
             </NodeInputs>
         </NodeCard>

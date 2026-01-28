@@ -15,7 +15,6 @@ const Editor = ({workflow} : {workflow : Workflow}) => {
           <FlowEditor workflow={workflow} />
         </section>
       </div>
-
     </ReactFlowProvider>
   )
 }

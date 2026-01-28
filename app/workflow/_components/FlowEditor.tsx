@@ -15,26 +15,14 @@ import {
 } from "@xyflow/react"
 
 import "@xyflow/react/dist/style.css"
-import { TaskType } from "@/types/task"
+import { TaskType } from "@/types/tasks"
 import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
-import NodeComponent from "./nodes/NodeComponent"
-
-interface FlowEditorProps {
-  workflow: Workflow
-}
-
-const NodeTypes = {
-  LumaeNode : NodeComponent
-}
-
-const snapGrid: [number, number] = [1, 1];
-
-const firViewOptions = {
-  padding: 2
-}
+import { NodeTypes } from "@/types/nodes"
+import { snapGrid, fitViewOptions } from "@/constant/reactFlow"
 
 
-const FlowEditor = ({ workflow }: FlowEditorProps) => {
+const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
+  
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([
     createReactFlowNode(TaskType.LAUNCH_BROWSER)
   ])
@@ -45,9 +33,7 @@ const FlowEditor = ({ workflow }: FlowEditorProps) => {
       setEdges((eds) => addEdge(connection, eds))
     },
     [setEdges]
-  )
-
-
+  );
 
   return (
     <main className="w-full h-screen">
@@ -59,12 +45,12 @@ const FlowEditor = ({ workflow }: FlowEditorProps) => {
         onConnect={onConnect}
         nodeTypes={NodeTypes}
         snapGrid={snapGrid}
-        fitViewOptions={firViewOptions}
+        fitViewOptions={fitViewOptions}
         snapToGrid
         fitView
       >
         <Background gap={12} size={1} />
-        <Controls position="top-left" fitViewOptions={firViewOptions}/>
+        <Controls position="top-left" fitViewOptions={fitViewOptions}/>
       </ReactFlow>
     </main>
   )
