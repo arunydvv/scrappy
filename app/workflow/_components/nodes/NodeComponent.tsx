@@ -8,8 +8,8 @@ import NodeInputs, { NodeInput } from './NodeInputs'
 
 
 const NodeComponent = memo((props: NodeProps) => {
-    const nodeData = props.data as AppNodeData;
-    const task = TaskRegistry[nodeData.type];
+    const nodeData = props.data as AppNodeData; // Data of the Node
+    const task = TaskRegistry[nodeData.type];   // LaunchBrowser etc
     
     return (
         <NodeCard nodeId={props.id} isSelected={props.selected}>

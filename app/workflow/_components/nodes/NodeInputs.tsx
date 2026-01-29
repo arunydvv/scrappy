@@ -27,7 +27,8 @@ export const NodeInput = ({ input, nodeId }: {
             )}
           />
         )
-        }
+      }
+      
       </div>
   )
 }

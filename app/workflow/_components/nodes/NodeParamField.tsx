@@ -12,8 +12,8 @@ const NodeParamField = ({ param, nodeId }: {
     const { updateNodeData, getNode } = useReactFlow();
     const node = getNode(nodeId) as AppNode;
 
-    const value = node?.data.inputs?.[param.name];
-    console.log("@VALUE", value)
+    const value = node?.data.inputs?.[param.name] ?? "";
+
 
     const updateNodeParamValue = useCallback((newValue: string) => {
         updateNodeData(nodeId, {
@@ -28,7 +28,13 @@ const NodeParamField = ({ param, nodeId }: {
 
     switch (param.type) {
         case TaskParamsType.STRING:
-            return <StringParamField params={param} />
+            return (
+                <StringParamField
+                    params={param}
+                    value={value ?? ""}
+                    updateNodeParamValue={updateNodeParamValue}
+                />
+            )
         default:
             return (
                 <div className='w-full'>
