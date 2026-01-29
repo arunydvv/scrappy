@@ -17,15 +17,15 @@ import {
 } from "@xyflow/react"
 
 import "@xyflow/react/dist/style.css"
-import { NodeTypes } from "@/types/nodes"
+import { AppNode, NodeTypes } from "@/types/nodes"
 import { snapGrid } from "@/constant/reactFlow"
 import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
 import { TaskType } from "@/types/tasks"
 
 const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
-  const { setViewport, setCenter } = useReactFlow()
+  const { setViewport, setCenter, screenToFlowPosition } = useReactFlow()
 
   const onConnect = useCallback(
     (connection: Connection) => {
@@ -33,6 +33,33 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
     },
     [setEdges]
   )
+
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault()
+    event.dataTransfer.dropEffect = "move"
+  }, [])
+
+  const onDrop = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    const taskType = event.dataTransfer.getData("application/reactflow");
+    if (typeof taskType === undefined || !taskType) return;
+
+    const position = screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    })
+
+    const newNode = createReactFlowNode(taskType as TaskType, position);
+    setNodes((nds) => nds.concat(newNode));
+    
+
+  }, [])
+
+
+
+
+
+
 
   useEffect(() => {
     if (!workflow.definition) {
@@ -72,7 +99,11 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       onConnect={onConnect}
       nodeTypes={NodeTypes}
       snapGrid={snapGrid}
+      minZoom={0.2}
+      maxZoom={2}
       snapToGrid
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
       <Background gap={12} size={1} />
       <Controls position="top-left" />

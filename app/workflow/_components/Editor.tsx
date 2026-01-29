@@ -5,6 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react'
 import { Workflow } from '@prisma/client'
 import FlowEditor from './FlowEditor'
 import Topbar from './topbar/Topbar'
+import TaskMenu from './TaskMenu'
 
 interface TopbarProps {
   title: string;
@@ -20,7 +21,9 @@ const Editor = ({workflow} : {workflow : Workflow}) => {
           subtitle={workflow.name}
           workflowId={workflow.id}
         />
-        <section className='flex flex-col h-full w-full overflow-hidden'>
+
+        <section className='flex flex h-full w-full overflow-hidden'>
+          <TaskMenu/>
           <FlowEditor workflow={workflow} />
         </section>
       </div>
