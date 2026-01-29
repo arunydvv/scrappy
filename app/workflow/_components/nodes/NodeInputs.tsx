@@ -11,15 +11,13 @@ const NodeInputs = ({children} : {children: React.ReactNode}) => {
   )
 }
 
-export const NodeInput = ({ input }: { input  : any}) => {
+export const NodeInput = ({ input, nodeId }: {
+  input: any,
+  nodeId: string
+}) => {
   return (
     <div className='flex justify-start relative p-3 bg-secondary w-full '>
-      <NodeParamField  param={input}>
-      </NodeParamField>
-
-      {/* <pre>
-        {JSON.stringify(input, null, 4)}
-      </pre> */}
+      <NodeParamField param={input} nodeId={nodeId}/>
       {
         !input.hideHandle && (
           <Handle
@@ -30,6 +28,7 @@ export const NodeInput = ({ input }: { input  : any}) => {
           />
         )
       }
+      
       </div>
   )
 }

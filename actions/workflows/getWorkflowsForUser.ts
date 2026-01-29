@@ -10,7 +10,6 @@ export const getWorkflowsForUser = cache(async () => {
 
     if (!userId) {
         throw new Error("Unauthenticated");
-        console.log("Hello")
     }
 
     return prisma.workflow.findMany({

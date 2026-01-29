@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { TaskRegistry } from "@/lib/workflow/task/registry"
-import { TaskType } from "@/types/task"
+import { TaskType } from "@/types/tasks"
 import { CoinsIcon, GripVerticalIcon } from "lucide-react"
 import React from "react"
 

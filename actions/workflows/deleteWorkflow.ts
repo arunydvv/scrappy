@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 
 export async function deleteWorkflow(id: string) {
     const { userId } = auth();
-    console.log("Deleting workflow with id:", id, "for user:", userId);
+    // console.log("Deleting workflow with id:", id, "for user:", userId);
     if (!userId) {
         throw new Error("Unauthorized");
     }
