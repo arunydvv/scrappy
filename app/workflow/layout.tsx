@@ -8,7 +8,7 @@ const layout = ({children} : {children : React.ReactNode}) => {
       <div className='flex flex-col w-full h-screen'>
       {children}
       <Separator />
-      <footer className='flex items-center justify-between p-2 '>
+      <footer className='flex items-center border-t-2 justify-between p-2 '>
         <Logo iconSize={16} fontSize='text-xl' />
         <ModeToggle />
       </footer>
