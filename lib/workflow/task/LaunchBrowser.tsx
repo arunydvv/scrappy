@@ -18,6 +18,12 @@ export const LaunchBrowserTask = {
             hideHandle: true,
             helperText: "e.g: https://www.google.com"
         }
+    ],
+    outputs: [
+        {
+            name: "Web page",
+            type: TaskParamsType.BROWSER_INSTANCE
+        }
     ]
 }
 

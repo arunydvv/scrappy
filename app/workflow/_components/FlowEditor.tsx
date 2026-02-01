@@ -29,7 +29,12 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      setEdges((eds) => addEdge(connection, eds))
+      setEdges((eds) => addEdge({
+        ...connection,
+        animated: true,
+        type: "smoothstep"
+      }, eds
+      ))
     },
     [setEdges]
   )

@@ -66,7 +66,7 @@ const SaveButton = ({workflowId }: { workflowId: string; }) => {
               variant="outline"
               className="flex items-center gap-2"
               onClickCapture={() => {
-                  router.refresh();               
+                  router.refresh()       
               }}
           >
               <RefreshCw size={16} />

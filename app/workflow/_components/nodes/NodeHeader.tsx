@@ -11,7 +11,7 @@ const NodeHeader = ({ taskType }: { taskType: TaskType }) => {
   const task = TaskRegistry[taskType]
 
   return (
-    <div className="flex items-center justify-between gap-2 px-3 py-2 border-b bg-muted/40 rounded-t-md">
+    <div className="flex items-center justify-between gap-2 px-3 py-2 border-b bg-muted/40 rounded-t-md drag-handle">
       {/* Left: Icon + Label */}
       <div className="flex items-center gap-2 min-w-0">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-background border">
