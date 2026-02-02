@@ -28,6 +28,7 @@ export const NodeOutput = ({output}: {output: TaskParams}) => {
             ColorForHandle[output.type]
            )}
         >
+          
         </Handle>
 
       </div>

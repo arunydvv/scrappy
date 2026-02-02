@@ -18,9 +18,15 @@ import {
 
 import "@xyflow/react/dist/style.css"
 import { AppNode, NodeTypes } from "@/types/nodes"
+import {EdgeTypes } from "@/types/edges"
 import { snapGrid } from "@/constant/reactFlow"
 import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
 import { TaskType } from "@/types/tasks"
+
+import { NodeInput } from "./nodes/NodeInputs"
+import { isValid } from "zod/v3"
+import { TaskRegistry } from "@/lib/workflow/task/registry"
+
 
 const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([])
@@ -32,7 +38,7 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       setEdges((eds) => addEdge({
         ...connection,
         animated: true,
-        type: "smoothstep"
+        type: "custom"
       }, eds
       ))
     },
@@ -60,8 +66,27 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
 
   }, [])
 
+  const isValidConnection = useCallback((connection: Connection | Edge) => {
+    //No self connection allowed
+    if (connection.source == connection.target) {
+      return false;
+    }
+
+    //only same type handles can be connected (same taskParam)
+    const sourceNode = nodes.find((node) => node.id === connection.source)
+    const targetNode = nodes.find((node) => node.id === connection.target)
+    if (!sourceNode || !targetNode) {
+      console.log("Invalid Connection: Source or target nod enot found");
+      return false;
+    }
+
+    const sourceTask = TaskRegistry[sourceNode.data.type]
 
 
+
+    return true;
+
+  }, [])
 
 
 
@@ -103,12 +128,15 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       nodeTypes={NodeTypes}
+      deleteKeyCode={["Delete"]}
+      edgeTypes={EdgeTypes}
       snapGrid={snapGrid}
       minZoom={0.2}
       maxZoom={2}
       snapToGrid
       onDragOver={onDragOver}
       onDrop={onDrop}
+      isValidConnection={isValidConnection}
     >
       <Background gap={12} size={1} />
       <Controls position="top-left" />

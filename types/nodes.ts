@@ -25,3 +25,4 @@ export interface ParamProps{
 export const NodeTypes = {
     LumaeNode: NodeComponent
 }
+

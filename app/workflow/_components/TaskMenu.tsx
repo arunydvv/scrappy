@@ -15,6 +15,8 @@ import { TaskType } from "@/types/tasks";
 const TaskMenu = () => {
   return (
     <aside className="w-[340px] min-w-[340px] max-w-[340px] border-r-2  border-separate h-full p-2 px-4 overflow-auto" >
+
+
       <Accordion type="multiple" className="w-full"
       defaultValue={["extraction"]}
       >
@@ -25,6 +27,8 @@ const TaskMenu = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+      
           
     </aside>
   )
@@ -44,6 +48,7 @@ function TaskMenuButton({ taskType }: { taskType: TaskType }) {
   return (
     <Button variant={"secondary"}
       draggable={true}
+      className="flex items-center justify-start"
       onDragStart={(event) => dragStartHandler(event, taskType)}
     >
       <task.icon size={16} className="mr-2" />
