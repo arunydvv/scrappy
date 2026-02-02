@@ -18,6 +18,7 @@ import {
 
 import "@xyflow/react/dist/style.css"
 import { AppNode, NodeTypes } from "@/types/nodes"
+import {EdgeTypes } from "@/types/edges"
 import { snapGrid } from "@/constant/reactFlow"
 import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
 import { TaskType } from "@/types/tasks"
@@ -32,7 +33,7 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       setEdges((eds) => addEdge({
         ...connection,
         animated: true,
-        type: "smoothstep"
+        type: "custom"
       }, eds
       ))
     },
@@ -103,6 +104,8 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       nodeTypes={NodeTypes}
+      deleteKeyCode={["Delete"]}
+      edgeTypes={EdgeTypes}
       snapGrid={snapGrid}
       minZoom={0.2}
       maxZoom={2}
