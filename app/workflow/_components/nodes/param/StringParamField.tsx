@@ -4,39 +4,36 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import React, { useId, useState } from "react"
 import { ParamProps } from "@/types/nodes"
-import { useReactFlow } from "@xyflow/react"
+import { Textarea } from "@/components/ui/textarea"
 
 
 
 
-const StringParamField = ({ params, value, updateNodeParamValue }: ParamProps) => {
+const StringParamField = ({ params, value, updateNodeParamValue, disabled }: ParamProps) => {
+    const [internalValue, setInternalValue] = useState(value);
     const id = useId()
-    const { toObject } = useReactFlow()
+
+    let Component: any = Input;
+    if (params.variant === 'textarea') {
+        Component = Textarea;
+    }
 
     return (
-        <div className="space-y-1.5 w-full">
-            <Label htmlFor={id} className="text-xs text-muted-foreground">
+        <div className="space-y-1 p-1 w-full">
+            <Label htmlFor={id} className="text-xs flex">
                 {params.name}
-                {params.required && <span className="ml-1 text-red-400">*</span>}
+                {params.required && <p className="text-red-400 px-2">*</p>}
             </Label>
-
-            <Input
+            <Component
                 id={id}
-                value={value ?? ""}
-                required={params.required}
-                placeholder={params.placeholder ?? ""}
-                className="text-sm"
-                onChange={(e) => {
-                    updateNodeParamValue(e.target.value)
-                    console.log("FLOW OBJ", toObject())
-                }}
+                disabled={disabled}
+                className="text-xs "
+                value={internalValue}
+                placeholder="Enter value here"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInternalValue(e.target.value)}
+                onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) => updateNodeParamValue(e.target.value)}
             />
-
-            {params.helperText && (
-                <p className="text-muted-foreground px-2">
-                    {params.helperText}
-                </p>
-            )}
+            {params.helperText && <p className="text-muted-foreground px-2">{params.helperText}</p>}
         </div>
     )
 }

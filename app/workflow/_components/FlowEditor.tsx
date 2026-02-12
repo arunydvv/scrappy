@@ -13,7 +13,7 @@ import {
   type Edge,
   type Connection,
   useReactFlow,
-  ReactFlowProvider,
+  getOutgoers,
 } from "@xyflow/react"
 
 import "@xyflow/react/dist/style.css"
@@ -22,28 +22,35 @@ import {EdgeTypes } from "@/types/edges"
 import { snapGrid } from "@/constant/reactFlow"
 import createReactFlowNode from "@/lib/workflow/createReactFlowNode"
 import { TaskType } from "@/types/tasks"
-
-import { NodeInput } from "./nodes/NodeInputs"
-import { isValid } from "zod/v3"
 import { TaskRegistry } from "@/lib/workflow/task/registry"
 
 
 const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
-  const { setViewport, setCenter, screenToFlowPosition } = useReactFlow()
+  const { setViewport, setCenter, screenToFlowPosition, updateNodeData } = useReactFlow()
+  
+
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      setEdges((eds) => addEdge({
-        ...connection,
-        animated: true,
-        type: "custom"
-      }, eds
-      ))
+      setEdges((eds) => addEdge({ ...connection, animated: true, type: "custom"}, eds));
+      if (!connection.targetHandle) return;
+
+      // Remove input value if it is present on connection
+      const node = nodes.find((nd) => nd.id === connection.target);
+      if (!node) return;
+
+      const nodeInputs = node.data.inputs;
+      updateNodeData(node.id, {
+        inputs: {
+          ...nodeInputs,
+          [connection.targetHandle]: '',
+        },
+      });
     },
-    [setEdges]
-  )
+    [setEdges, updateNodeData, nodes]
+  );
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
@@ -53,7 +60,7 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
   const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     const taskType = event.dataTransfer.getData("application/reactflow");
-    if (typeof taskType === undefined || !taskType) return;
+    if (!taskType) return;
 
     const position = screenToFlowPosition({
       x: event.clientX,
@@ -64,7 +71,7 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
     setNodes((nds) => nds.concat(newNode));
     
 
-  }, [])
+  }, [screenToFlowPosition, setNodes])
 
   const isValidConnection = useCallback((connection: Connection | Edge) => {
     //No self connection allowed
@@ -76,17 +83,41 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
     const sourceNode = nodes.find((node) => node.id === connection.source)
     const targetNode = nodes.find((node) => node.id === connection.target)
     if (!sourceNode || !targetNode) {
-      console.log("Invalid Connection: Source or target nod enot found");
+      console.log("Invalid Connection: Source or target node not found");
       return false;
     }
 
     const sourceTask = TaskRegistry[sourceNode.data.type]
+    const targetTask = TaskRegistry[targetNode.data.type]
+
+    if (!sourceTask || !targetTask) {
+      console.log("Invalid Connection: Source or target task not found");
+      return false;
+    }
+
+    const output = sourceTask.outputs.find((out) => out.name === connection.sourceHandle)
+    const input = targetTask.inputs.find((inp) => inp.name === connection.targetHandle)
+    console.log({
+      input, output
+    })
 
 
+    // Cycle connection not allowed
+    const hasCycle = (node: AppNode, visited = new Set()) => {
+      if (visited.has(node.id)) return false;
+      visited.add(node.id);
 
-    return true;
+      for (const outgoer of getOutgoers(node, nodes, edges)) {
+        if (outgoer.id === connection.source) return true;
+        if (hasCycle(outgoer, visited)) return true;
+      }
+    };
 
-  }, [])
+    const detectedCycle = hasCycle(targetNode);
+
+    return !detectedCycle;
+
+  }, [nodes, edges])
 
 
 

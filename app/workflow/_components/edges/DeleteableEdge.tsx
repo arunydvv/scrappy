@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import {
     BaseEdge,
     EdgeLabelRenderer,
-    getStraightPath,
     EdgeProps,
     useReactFlow,
+    getSmoothStepPath,
 } from "@xyflow/react";
 
 export default function DeleteableEdge({
@@ -16,7 +16,7 @@ export default function DeleteableEdge({
     ...edgeProps
 }: EdgeProps) {
     const { setEdges } = useReactFlow();
-    const [edgePath, labelX, labelY] = getStraightPath(edgeProps);
+    const [edgePath, labelX, labelY] = getSmoothStepPath(edgeProps);
 
     return (
         <>
