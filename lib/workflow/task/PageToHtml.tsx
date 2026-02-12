@@ -1,4 +1,5 @@
 import { TaskParamsType, TaskType } from "@/types/tasks";
+import { WorkflowTask } from "@/types/workflowTypes";
 import { CodeIcon, Compass, FileCode, GlobeIcon, LucideProps } from "lucide-react";
 
 export const PageToHtmlTask = {
@@ -8,6 +9,7 @@ export const PageToHtmlTask = {
         <FileCode className="stroke-pink-600 " {...props} />
     ),
     isEntryPoint: false,
+    credits:2,
     inputs: [
         {
             name: "Web page",
@@ -27,5 +29,5 @@ export const PageToHtmlTask = {
         
 
     ]
-}
+} satisfies WorkflowTask;
 

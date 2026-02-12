@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import SaveButton from './SaveButton'
+import ExecuteButton from './ExecuteButton'
 
 
 const Topbar = ({ title, subtitle, workflowId }: {
@@ -36,6 +37,7 @@ const Topbar = ({ title, subtitle, workflowId }: {
               </div>
           </div>
           <div className='flex gap-1 flex-1 justify-end '>
+              <ExecuteButton workflowId={workflowId} />
               <SaveButton workflowId={workflowId} />              
           </div>
           
