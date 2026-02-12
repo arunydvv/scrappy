@@ -5,7 +5,7 @@ const BrowserInstanceParamField = ({ params, value, updateNodeParamValue }: Para
 ) => {
   return (
       <p className='text-xs'>
-          {/* {param.name}           */}
+          {params.name}
       </p>
   )
 }

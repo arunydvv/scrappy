@@ -4,11 +4,16 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { TaskRegistry } from "@/lib/workflow/task/registry"
 import { TaskType } from "@/types/tasks"
+import { useReactFlow } from "@xyflow/react"
 import { CoinsIcon, GripVerticalIcon } from "lucide-react"
 import React from "react"
 
-const NodeHeader = ({ taskType }: { taskType: TaskType }) => {
+const NodeHeader = ({ taskType, nodeId }: {
+  taskType: TaskType,
+  nodeId: string,
+ }) => {
   const task = TaskRegistry[taskType]
+  const  {deleteElements} = useReactFlow();
 
   return (
     <div className="flex items-center justify-between gap-2 px-3 py-2 border-b bg-muted/40 rounded-t-md drag-handle">
@@ -26,7 +31,7 @@ const NodeHeader = ({ taskType }: { taskType: TaskType }) => {
       {/* Right: Badges + Drag */}
       <div className="flex items-center gap-1.5">
         {task.isEntryPoint && (
-          <Badge variant="secondary" className="text-[10px] px-1.5">
+          <Badge variant="outline" className="text-[10px] border border-green-500 px-1.5">
             Entry Point
           </Badge>
         )}

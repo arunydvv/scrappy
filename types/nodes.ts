@@ -19,7 +19,8 @@ export interface ParamProps{
     // name?: string,
     params: TaskParams,
     value?: string,
-    updateNodeParamValue: (newValue: string) => void
+    updateNodeParamValue: (newValue: string) => void,
+    disabled?: boolean
 }
 
 export const NodeTypes = {

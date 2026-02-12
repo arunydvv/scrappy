@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useEdges } from "@xyflow/react";
 import React from "react";
 import NodeParamField from "./NodeParamField";
 import { ColorForHandle } from "./common";
@@ -18,10 +18,17 @@ export const NodeInput = ({
 }: {
   input: any;
   nodeId: string;
-}) => {
+  }) => {
+  
+  const edges = useEdges();
+  const isConnected = edges.some((edge) => edge.target === nodeId && edge.targetHandle === input.name);
+
+
   return (
     <div className="flex justify-start relative p-3 bg-secondary w-full">
       {/* LEFT HANDLE */}
+      <NodeParamField param={input} nodeId={nodeId} disabled={isConnected} />
+
       {!input.hideHandle && (
         <Handle
           id={input.name}
@@ -36,8 +43,6 @@ export const NodeInput = ({
         />
       )}
 
-      {/* INPUT FIELD */}
-      <NodeParamField param={input} nodeId={nodeId} />
     </div>
   );
 };
