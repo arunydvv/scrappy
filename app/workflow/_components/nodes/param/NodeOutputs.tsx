@@ -19,6 +19,7 @@ export const NodeOutput = ({output}: {output: TaskParams}) => {
         <p className='text-xs text-muted-foreground'>
           {output.name}
         </p>
+
         <Handle
           id={output.name}
           type="source"
@@ -28,8 +29,8 @@ export const NodeOutput = ({output}: {output: TaskParams}) => {
             ColorForHandle[output.type]
            )}
         >
-          
         </Handle>
+        
 
       </div>
     )

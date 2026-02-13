@@ -3,11 +3,7 @@ import { Edge } from '@xyflow/react';
 import { TaskRegistry } from '@/lib/workflow/task/registry';
 import { AppNode, AppNodeMissingInputs } from '@/types/nodes';
 import { WorkflowExecutionPlan, WorkflowExecutionPlanPhase } from '@/types/workflowTypes';
-
-export enum FlowToExecutionPlanValidationError {
-    'NO_ENTRY_POINT',
-    'INVALID_INPUTS',
-}
+import { FlowToExecutionPlanValidationError } from '@/types/errors';
 
 type FlowToExecutionPlanType = {
     executionPlan?: WorkflowExecutionPlan;
