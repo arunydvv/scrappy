@@ -19,14 +19,16 @@ export default function ExecuteBtn({ workflowId }: { workflowId: string }) {
 
         // client-side validation
         if (!plan) return;
+      
+       
 
         startTransition(async () => {
             try {
-                await RunWorkflow({
+                const data = await RunWorkflow({
                     workflowId,
                     flowDefinition: JSON.stringify(toObject()),
                 });
-
+               
                 toast.success('Execution started successfully.', {
                     id: 'flow-execution',
                 });

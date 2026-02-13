@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { FlowToExecutionPlan } from "@/lib/workflow/execution/executionPlan";
+import { TaskRegistry } from "@/lib/workflow/task/registry";
 import { WorkflowExecutionPlan } from "@/types/workflowTypes";
 import { auth } from "@clerk/nextjs/server";
 
@@ -9,10 +10,16 @@ export async function RunWorkflow(form: {
     workflowId: string,
     flowDefinition?: string
 }) {
+
+    console.log("Entered the server action runExecution")
+
     const { userId } = auth();
     if (!userId) {
         throw new Error("Unauthenticated");
     }
+
+    
+ 
 
 
     const { workflowId, flowDefinition } = form;
@@ -48,7 +55,43 @@ export async function RunWorkflow(form: {
     }
 
     executionPlan = result.executionPlan;
-    console.log("Execution plan", executionPlan);
+
+    const execution = await prisma.workflowExecution.create({
+        data: {
+            workflowId,
+            userId,
+            status: "PENDING",
+            startedAt: new Date(),
+            trigger: "manual",
+            phases: {
+                create: executionPlan.flatMap(phase => {
+                    return phase.nodes.flatMap((node) => {
+                        return {
+                            userId,
+                            status: "CREATED",
+                            number: phase.phase,
+                            node: JSON.stringify(node),
+                            name: TaskRegistry[node.data.type].label,
+                        }
+                    })
+                })
+            },
+            
+        },
+        select: {
+            id: true,
+            phases: true,
+        }
+    });
+
+
+    if (!execution) {
+        throw new Error("workflow execution not created!!!");
+    }
 
     
+
+
+
+
 }
