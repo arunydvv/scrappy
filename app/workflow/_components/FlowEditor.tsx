@@ -32,25 +32,39 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
   
 
 
+
+
+
+
+
+
+  //  /* -------------------------- CONNECT LOGIC -------------------------- */
+
   const onConnect = useCallback(
     (connection: Connection) => {
       setEdges((eds) => addEdge({ ...connection, animated: true, type: "custom"}, eds));
       if (!connection.targetHandle) return;
 
       // Remove input value if it is present on connection
-      const node = nodes.find((nd) => nd.id === connection.target);
+      const node = nodes.find(
+        (nd) => nd.id === connection.target
+      );
       if (!node) return;
 
       const nodeInputs = node.data.inputs;
       updateNodeData(node.id, {
         inputs: {
           ...nodeInputs,
-          [connection.targetHandle]: '',
+          [connection.targetHandle]: "",
         },
       });
     },
     [setEdges, updateNodeData, nodes]
   );
+
+
+
+ /* -------------------------- DRAG HANDLING -------------------------- */
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
@@ -73,8 +87,14 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
 
   }, [screenToFlowPosition, setNodes])
 
+
+
+
+    /* -------------------------- VALIDATION -------------------------- */
+
+
   const isValidConnection = useCallback((connection: Connection | Edge) => {
-    //No self connection allowed
+    // 1️⃣ No self connection
     if (connection.source == connection.target) {
       return false;
     }
@@ -97,20 +117,31 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
 
     const output = sourceTask.outputs.find((out) => out.name === connection.sourceHandle)
     const input = targetTask.inputs.find((inp) => inp.name === connection.targetHandle)
+    if (!output || !input || output.type !== input.type) {
+      console.error("Invalid connection: Type mismatch");
+      return false;
+    }
+    
     console.log({
       input, output
     })
 
 
-    // Cycle connection not allowed
-    const hasCycle = (node: AppNode, visited = new Set()) => {
+    //// 3️⃣  Cycle connection not allowed
+    const hasCycle = (node: AppNode, visited = new Set<string>()) => {
       if (visited.has(node.id)) return false;
       visited.add(node.id);
 
-      for (const outgoer of getOutgoers(node, nodes, edges)) {
+      for (const outgoer of getOutgoers(
+        node,
+        nodes,
+        edges)) {
         if (outgoer.id === connection.source) return true;
         if (hasCycle(outgoer, visited)) return true;
+        
       }
+      return false;
+
     };
 
     const detectedCycle = hasCycle(targetNode);
@@ -149,6 +180,22 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
       console.error("Invalid workflow definition:", err)
     }
   }, [workflow.definition])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   return (

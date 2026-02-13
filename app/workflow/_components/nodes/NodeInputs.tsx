@@ -3,6 +3,8 @@ import { Handle, Position, useEdges } from "@xyflow/react";
 import React from "react";
 import NodeParamField from "./NodeParamField";
 import { ColorForHandle } from "./common";
+import useFlowValidation from "@/components/hooks/useFlowValidation";
+
 
 const NodeInputs = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,20 +14,25 @@ const NodeInputs = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const NodeInput = ({
-  input,
-  nodeId,
-}: {
+export const NodeInput = ({ input, nodeId, }: {
   input: any;
   nodeId: string;
-  }) => {
-  
+}) => {
+
+  const { invalidInputs } = useFlowValidation();
+
   const edges = useEdges();
   const isConnected = edges.some((edge) => edge.target === nodeId && edge.targetHandle === input.name);
 
+  const hasErrors = invalidInputs
+    .find((node) => node.nodeId === nodeId)
+    ?.inputs.find((invalidInput) => invalidInput === input.name);
+
 
   return (
-    <div className="flex justify-start relative p-3 bg-secondary w-full">
+    <div className={cn("flex justify-start relative p-3 bg-secondary w-full",
+      hasErrors && 'bg-destructive/30'
+    )}>
       {/* LEFT HANDLE */}
       <NodeParamField param={input} nodeId={nodeId} disabled={isConnected} />
 

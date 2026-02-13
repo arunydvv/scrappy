@@ -27,3 +27,9 @@ export const NodeTypes = {
     LumaeNode: NodeComponent
 }
 
+
+
+export type AppNodeMissingInputs = {
+    nodeId: string;
+    inputs: string[];
+};
