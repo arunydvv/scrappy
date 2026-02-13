@@ -14,6 +14,7 @@ import {
   type Connection,
   useReactFlow,
   getOutgoers,
+  getNodesBounds,
 } from "@xyflow/react"
 
 import "@xyflow/react/dist/style.css"
@@ -154,33 +155,45 @@ const FlowEditorInner = ({ workflow }: { workflow: Workflow }) => {
 
 
   useEffect(() => {
-    if (!workflow.definition) {
-      setNodes([createReactFlowNode(TaskType.LAUNCH_BROWSER, { x: 0, y: 0 })])
-      setEdges([])
+    const centerFlow = (flowNodes: AppNode[]) => {
+      if (!flowNodes.length) return;
 
       requestAnimationFrame(() => {
-        setCenter(0, 0)
-      })
-      return
+        const bounds = getNodesBounds(flowNodes);
+        setCenter(
+          bounds.x + bounds.width / 2,
+          bounds.y + bounds.height / 2,
+          { zoom: 1, duration: 0 }
+        );
+      });
+    };
+
+    if (!workflow.definition) {
+      const defaultNode = createReactFlowNode(
+        TaskType.LAUNCH_BROWSER,
+        { x: 0, y: 0 }
+      );
+
+      setNodes([defaultNode]);
+      setEdges([]);
+      centerFlow([defaultNode]);
+      return;
     }
 
     try {
-      const parsed = JSON.parse(workflow.definition)
+      const parsed = JSON.parse(workflow.definition);
 
-      setNodes(parsed.nodes ?? [])
-      setEdges(parsed.edges ?? [])
+      const loadedNodes = parsed.nodes ?? [];
+      const loadedEdges = parsed.edges ?? [];
 
-      if (parsed.viewport) {
-        const { x = 0, y = 0, zoom = 1 } = parsed.viewport
-        requestAnimationFrame(() => {
-          // setViewport({ x, y, zoom })
-        })
-      }
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+
+      centerFlow(loadedNodes);
     } catch (err) {
-      console.error("Invalid workflow definition:", err)
+      console.error("Invalid workflow definition:", err);
     }
-  }, [workflow.definition])
-
+  }, [workflow.definition, setCenter]);
 
 
 
