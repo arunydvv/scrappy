@@ -5,12 +5,15 @@ import { WorkflowExecutionStatus } from '@/types/workflowTypes';
 import { refetchExecution } from '@/actions/execution/refetchExecutions';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarIcon, Loader2Icon, CircleDashedIcon, ClockIcon, CoinsIcon, LucideIcon, WorkflowIcon } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { DatesToDurationString } from '@/lib/helper/dates';
+import { getPhasesTotalCreditsConsumed } from '@/lib/helper/getExecutionCost';
+import { cn } from '@/lib/utils';
+
 
 
 type ExecutionData = NonNullable<
@@ -20,6 +23,9 @@ type ExecutionData = NonNullable<
 const ExecutionViewer = ({ initialData }: {
   initialData: ExecutionData;
 }) => {
+
+  const [selectedPhase, setselectedPhase] = useState<string | null>(null);
+
 
   const query = useQuery({
     queryKey: ["execution", initialData.id],
@@ -32,8 +38,18 @@ const ExecutionViewer = ({ initialData }: {
   });
 
 
+  // const phasedetails = useQuery({
+  //   queryKey: ["phaseDetails", selectedPhase],
+  //   enabled: selectedPhase != null,
+  //   queryFn: () => {
+      
+  //   }
+
+  // })
+  
+  const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
   const duration = DatesToDurationString(query.data?.completedAt, query.data?.completedAt)
-  console.log(duration)
+  const creditsConsumed = getPhasesTotalCreditsConsumed(query.data?.phases || []);
 
 
 
@@ -62,14 +78,14 @@ const ExecutionViewer = ({ initialData }: {
             icon={ClockIcon}
             label={"Duration"}
             value={duration ? duration : (
-              <Loader2Icon size={20}  className='animate-spin'/> 
-            ) }
+              <Loader2Icon size={20} className='animate-spin' />
+            )}
           />
 
           <ExecutionLabel
             icon={CoinsIcon}
             label={"Credits consumed"}
-            value={"TODO"}
+            value={creditsConsumed}
           />
 
         </div>
@@ -90,13 +106,24 @@ const ExecutionViewer = ({ initialData }: {
 
             <Button
               key={phase.id}
-              variant={"outline"}
-              className='w-full justify-between px-2 my-2 border-none'>
+              // variant={"outline"}
+              className={cn('w-full justify-between px-2 my-2 border-none')}
+              variant = {selectedPhase === phase.id ? "secondary" : "ghost"}
+          
+              onClick={() => {
+                if (isRunning) return;
+                setselectedPhase(phase.id);
+              }}
+            
+            >
 
               <div className='flex items-center gap-2'>
                 <Badge variant={"outline"}>{index + 1} </Badge>
                 <p className='font-semibold '>{phase.name} </p>
-             </div>
+              </div>
+              <p className='text-xs text-muted-foreground'>
+                {phase.status}
+              </p>
 
 
             </Button>
