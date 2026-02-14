@@ -1,3 +1,5 @@
+'use client'; 
+
 import ToolTipWrapper from '@/components/ToolTipWrapper'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -7,10 +9,11 @@ import SaveButton from './SaveButton'
 import ExecuteButton from './ExecuteButton'
 
 
-const Topbar = ({ title, subtitle, workflowId }: {
+const Topbar = ({ title, subtitle, workflowId, hideButtons = false }: {
     title: string,
     subtitle?: string,
-    workflowId: string
+    workflowId: string,
+    hideButtons?: boolean
 }) => {
     const router = useRouter();
   return (
@@ -37,8 +40,14 @@ const Topbar = ({ title, subtitle, workflowId }: {
               </div>
           </div>
           <div className='flex gap-1 flex-1 justify-end '>
-              <ExecuteButton workflowId={workflowId} />
-              <SaveButton workflowId={workflowId} />              
+              {
+                  hideButtons === false && (
+                      <>
+                          <ExecuteButton workflowId={workflowId} />
+                          <SaveButton workflowId={workflowId} />      
+                      </>  
+                )
+              }          
           </div>
           
     </header>
