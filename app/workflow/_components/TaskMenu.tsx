@@ -20,14 +20,14 @@ const TaskMenu = () => {
         className="w-full"
         defaultValue={["start"]}
       >
-        <AccordionItem value="start">
+        {/* <AccordionItem value="start">
           <AccordionTrigger className="font-bold">
             Start
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-1">
             <TaskMenuButton taskType={TaskType.LAUNCH_BROWSER} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
 
         <AccordionItem value="data-extraction">
           <AccordionTrigger className="font-bold">
