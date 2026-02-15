@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import React, { useId, useState } from "react"
+import React, { ReactElement, useId, useState } from "react"
 import { ParamProps } from "@/types/nodes"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -30,8 +30,8 @@ const StringParamField = ({ params, value, updateNodeParamValue, disabled }: Par
                 className="text-xs "
                 value={internalValue}
                 placeholder="Enter value here"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInternalValue(e.target.value)}
-                onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) => updateNodeParamValue(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setInternalValue(e.target.value)}
+                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => updateNodeParamValue(e.target.value)}
             />
             {params.helperText && <p className="text-muted-foreground px-2">{params.helperText}</p>}
         </div>

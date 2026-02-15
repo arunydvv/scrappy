@@ -1,11 +1,13 @@
 "use server";
 
+import ExecuteBtn from "@/app/workflow/_components/topbar/ExecuteButton";
 import prisma from "@/lib/prisma";
 import { FlowToExecutionPlan } from "@/lib/workflow/execution/executionPlan";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
 import { ExecutionPhaseStatus, WorkflowExecutionPlan, WorkflowExecutionStatus, WorkflowExecutionTrigger } from "@/types/workflowTypes";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { executeWorkflow } from "./executeWorkflow";
 
 export async function RunWorkflow(form: {
     workflowId: string,
@@ -90,6 +92,7 @@ export async function RunWorkflow(form: {
         throw new Error("workflow execution not created!!!");
     }
 
+    executeWorkflow(execution.id); //run this in bg
 
     redirect(`/workflow/runs/${workflowId}/${execution.id}`)
 }
