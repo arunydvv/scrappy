@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { WorkflowExecutionStatus } from '@/types/workflowTypes';
-import { refetchExecution } from '@/actions/execution/refetchExecutions';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarIcon, Loader2Icon, CircleDashedIcon, ClockIcon, CoinsIcon, LucideIcon, WorkflowIcon } from 'lucide-react';
 import { ReactNode, useState } from 'react';
@@ -13,11 +12,13 @@ import { Badge } from '@/components/ui/badge';
 import { DatesToDurationString } from '@/lib/helper/dates';
 import { getPhasesTotalCreditsConsumed } from '@/lib/helper/getExecutionCost';
 import { cn } from '@/lib/utils';
+import { getWorkflowExecutionWithPhases } from '@/actions/execution/getWorkflowExecutionWithPhases';
+import { getWorkflowPhaseDetails } from '@/actions/execution/getWorkflowPhaseDetails';
 
 
 
 type ExecutionData = NonNullable<
-  Awaited<ReturnType<typeof refetchExecution>>
+  Awaited<ReturnType<typeof getWorkflowExecutionWithPhases>>
 >;
 
 const ExecutionViewer = ({ initialData }: {
@@ -29,26 +30,31 @@ const ExecutionViewer = ({ initialData }: {
 
   const query = useQuery({
     queryKey: ["execution", initialData.id],
-    queryFn: () => refetchExecution(initialData.id),
+    queryFn: () => getWorkflowExecutionWithPhases(initialData.id),
     initialData,
     refetchInterval: (q) =>
       q.state.data?.status === WorkflowExecutionStatus.RUNNING
-        ? 1000
+        ? 2000
         : false,
   });
 
+  
 
-  // const phasedetails = useQuery({
-  //   queryKey: ["phaseDetails", selectedPhase],
-  //   enabled: selectedPhase != null,
-  //   queryFn: () => {
-      
-  //   }
 
-  // })
+  const phaseDetails = useQuery({
+    queryKey: ["phaseDetails", selectedPhase],
+    enabled: selectedPhase != null,
+    queryFn: ({ queryKey }) =>
+      getWorkflowPhaseDetails(queryKey[1] as string),
+  })
+
   
   const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
-  const duration = DatesToDurationString(query.data?.completedAt, query.data?.completedAt)
+  const duration = DatesToDurationString(
+    query.data?.completedAt,
+    query.data?.completedAt
+  )
+
   const creditsConsumed = getPhasesTotalCreditsConsumed(query.data?.phases || []);
 
 
@@ -102,7 +108,7 @@ const ExecutionViewer = ({ initialData }: {
         <Separator />
 
         <div className='overflow-auto h-full px-2 py-4'>
-          {query.data?.phases.map((phase, index) => (
+          {query.data?.phases.map((phase: any, index:number) => (
 
             <Button
               key={phase.id}
@@ -133,6 +139,11 @@ const ExecutionViewer = ({ initialData }: {
         </div>
 
       </aside>
+      <div className='flex w-full h-full'>
+        <pre>
+          {phaseDetails.data ? JSON.stringify(phaseDetails.data, null, 4) : "Click on  a Phase to see details" }
+          </pre>
+      </div>
 
     </div>
   )
